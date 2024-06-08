@@ -11,6 +11,30 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
 
   let mentors = [] // fix this
   let learners = [] // fix this
+  const URLlearners='http://localhost:3003/api/learners'
+  const URLmentors='http://localhost:3003/api/mentors'
+
+
+  
+  async function getData(){
+    learners = (await axios.get(URLlearners)).data;
+    mentors = (await axios.get(URLmentors)).data;
+    // learners.forEach(learner=>{
+    //   let mentorIDs=learner.mentors;
+    //   learner.mentors=mentorIDs.map(id=>{
+    //     let mentor=mentors.filter(mentor=>mentor.id===id)[0];
+    //     return `${mentor.firstName} ${mentor.lastName}`;
+    //   })
+    // })
+    
+  }
+
+
+  await getData();
+    
+  
+
+
 
   // 👆 ==================== TASK 1 END ====================== 👆
 
@@ -28,6 +52,17 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
   //     "Grace Hopper"
   //   ]`
   // }
+  async function combineLearnerMentorData(){
+    learners.forEach(learner=>{
+      let mentorIDs=learner.mentors;
+      learner.mentors=mentorIDs.map(id=>{
+        let mentor=mentors.filter(mentor=>mentor.id===id)[0];
+        return `${mentor.firstName} ${mentor.lastName}`;
+      })
+    })
+    
+  }
+  await combineLearnerMentorData();
 
   // 👆 ==================== TASK 2 END ====================== 👆
 
@@ -47,11 +82,42 @@ async function sprintChallenge5() { // Note the async keyword so you can use `aw
     // ❗ Fill each <li> with a mentor name, and append it to the <ul> mentorList.
     // ❗ Inspect the mock site closely to understand what the initial texts and classes look like!
 
+
+    let elCards=document.querySelector('.cards');
+    
     const card = document.createElement('div')
     const heading = document.createElement('h3')
     const email = document.createElement('div')
     const mentorsHeading = document.createElement('h4')
     const mentorsList = document.createElement('ul')
+
+    card.classList.add('card');
+    mentorsHeading.classList.add('closed');
+
+    heading.textContent=learner.fullName;
+    email.textContent=learner.email;
+    mentorsHeading.textContent="Mentors";
+
+    card.append(heading);
+    card.append(email);
+    card.append(mentorsHeading);
+    card.append(mentorsList);
+
+    learner.mentors.forEach(mentor=>{
+      let newLi=document.createElement('li');
+      newLi.textContent=mentor;
+      mentorsList.append(newLi)
+    })
+
+    // card.addEventListener('click',(event)=>{
+    //   let clickedCard=event.target;
+    //   console.log('Clicked');
+    //   elCards.forEach(card=>card.classList.remove('selected'))
+    //   clickedCard.classList.add('selected');
+    // })
+
+    elCards.append(card);
+
 
     // 👆 ==================== TASK 3 END ====================== 👆
 
